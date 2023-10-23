@@ -6,6 +6,8 @@ from tkinter import *
 
 	
 def adicionando_cliques():
+	'''Adiciona numa planilha todas as posições de da tela para atender diferentes dimensões de tela e
+ atender o requisitos da empresa em que trabalho.'''
 		add = 0
 		global posicoes
 		posicoes = []
@@ -25,6 +27,7 @@ def adicionando_cliques():
 
 
 def alternado_estado():
+	'''Pega os dados das posições, os numeros de série e retorna a ação da automação'''
 	numero_serie = pd.read_excel('Numeros de série.xlsx')
 	print(numero_serie)
 	pos = pd.read_excel('Posições.xlsx')
