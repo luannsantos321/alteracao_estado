@@ -15,7 +15,12 @@ def adicionando_cliques():
 			time.sleep(10)
 			parametro = pyautogui.position()
 			add +=1
-			notification.notify(title= 'Notificação', message =f'Adicionado {add}', timeout= 0.5 )
+					Notification(
+	title='Posição do clique',
+	description=f'Adicionou posição {add}',
+	duration=2,                                   # Duration in seconds
+	urgency='normal'
+).send()
 			posicoes.append(parametro)
 			
 			
