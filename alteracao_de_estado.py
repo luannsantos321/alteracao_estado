@@ -1,63 +1,59 @@
 import pyautogui
 import pandas as pd
 import time
-from plyer import notification
+import webbrowser
+#from plyer import notification
 from tkinter import *
-
+from pynotifier import Notification
 	
 def adicionando_cliques():
-	'''Adiciona numa planilha todas as posições de da tela para atender diferentes dimensões de tela e
- atender o requisitos da empresa em que trabalho.'''
 		add = 0
 		global posicoes
 		posicoes = []
-		while add < 7:
-			time.sleep(10)
+		while add < 2:
+			time.sleep(5)
 			parametro = pyautogui.position()
-			add +=1
-					Notification(
-	title='Posição do clique',
-	description=f'Adicionou posição {add}',
+			add += 1
+			#notification.notify(title= 'NotificaÃ§Ã£o', message =f'Adicionado {add}', timeout= 0.5 )
+			Notification(
+	title='PosiÃ§Ã£o do clique',
+	description=f'Adicionou posiÃ§Ã£o {add}',
 	duration=2,                                   # Duration in seconds
 	urgency='normal'
-).send()
+	).send()
 			posicoes.append(parametro)
-			
-			
 			print(posicoes)
-
 		pos = pd.DataFrame(posicoes,columns=['x','y'])
-		pos.to_excel('Posições.xlsx', index=False)
+		pos.to_excel('PosiÃ§Ãµes.xlsx', index=False)
 
 
 
 def alternado_estado():
-	'''Pega os dados das posições, os numeros de série e retorna a ação da automação'''
-	numero_serie = pd.read_excel('Numeros de série.xlsx')
-	print(numero_serie)
-	pos = pd.read_excel('Posições.xlsx')
+	sheets = pd.read_csv('https://docs.google.com/spreadsheets/d/1b1gnPbBe-elIOwO3JmGQd-3NVFCKbwyk/export?format=csv')
+	print(sheets)
+	pos = pd.read_excel('PosiÃ§Ãµes.xlsx')
 	print(pos)
-	for alterando in numero_serie.values:
+	for contagem,alterando in enumerate(sheets.values):
 		print(alterando[0])
-		pyautogui.click(x=pos.iloc[0,0],y=pos.iloc[0,1], clicks=2)
+		contagem = contagem + 1
+		
+		
+		link = f'https://estoque.brisanet.net.br/#/estoque/itens/item/estado/alterar/{alterando[0]}'
+		webbrowser.open(link)
+		time.sleep(6)
+		pyautogui.click(x=pos.iloc[0,0],y=pos.iloc[0,1])
 		time.sleep(2)
-		pyautogui.write(alterando[0])
 		pyautogui.click(x=pos.iloc[1,0],y=pos.iloc[1,1])
-		time.sleep(4)
-		pyautogui.click(x=pos.iloc[2,0],y=pos.iloc[2,1])
-		time.sleep(4)
-		pyautogui.click(x=pos.iloc[3,0],y=pos.iloc[3,1])
-		time.sleep(4)
-		pyautogui.click(x=pos.iloc[4,0],y=pos.iloc[4,1])
-		time.sleep(4)
-		pyautogui.click(x=pos.iloc[5,0],y=pos.iloc[5,1])
-		time.sleep(4)
-		pyautogui.click(x=pos.iloc[6,0],y=pos.iloc[6,1])
-		time.sleep(4)
+		time.sleep(2)
+		pyautogui.hotkey('ctrl','w')
+		time.sleep(2)
+		print(contagem)
+	print('Finalizada a alteraÃ§Ã£o')
+
 window = Tk()
 window.title('AAA')
 
-botao_posicao = Button(window,text='Pegando posições', command=adicionando_cliques)
+botao_posicao = Button(window,text='Pegando posiÃ§Ãµes', command=adicionando_cliques)
 botao_posicao.pack(expand=True)
 botao_alterado_estado= Button(window,text='GO!', command=alternado_estado)
 botao_alterado_estado.pack(expand=True)
